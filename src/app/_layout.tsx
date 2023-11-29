@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { Image, Text, View } from 'react-native';
 
 export default function Layout() {
     return (

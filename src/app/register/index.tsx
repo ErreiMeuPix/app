@@ -1,15 +1,11 @@
 import React from 'react';
 import { SafeAreaView, View, Image, Text, Button, TouchableOpacity, } from 'react-native';
+import { SupabaseClient } from '../../utils/supabase'
 import {
     GoogleSignin,
     statusCodes,
 } from '@react-native-google-signin/google-signin';
-// const [request, response, promptAsync] = AuthSession.useAuthRequest({
-//     iosClientId: '696135610397-5shrtht51rebc1i4936pi66edhn6g47k.apps.googleusercontent.com',
-//     androidClientId: '696135610397-qjft4d1qbgc1e8fi700amvjrtr203k6e.apps.googleusercontent.com',
-//     webClientId: '696135610397-fkuvhilff6sjhjn4747lvdho4rboib4j.apps.googleusercontent.com',
-// }
-// )
+
 
 GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -22,8 +18,16 @@ const Register: React.FC = () => {
     async function onSignin() {
         try {
             await GoogleSignin.hasPlayServices();
+
             const userInfo = await GoogleSignin.signIn();
-            console.log(JSON.stringify(userInfo, null, 2))
+
+            if (!userInfo.idToken) {
+                //lanca mensagem de erro
+                return
+            }
+
+            const { data, error } = await SupabaseClient.auth.signInWithIdToken({ provider: 'google', token: userInfo.idToken })
+
         } catch (error: any) {
             console.log(error)
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
