@@ -47,7 +47,7 @@ const Home: React.FC = () => {
                             <TouchableOpacity
                                 onPress={onUpdatePixKey}
                                 activeOpacity={0.9}
-                                style={{ backgroundColor: '#4B4B4B', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: '50%', }}
+                                style={{ backgroundColor: '#4B4B4B', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 50, }}
                             >
                                 <Feathers
                                     name={iconName}

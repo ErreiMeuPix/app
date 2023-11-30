@@ -1,15 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { SafeAreaView, View, Image, Text, Button } from 'react-native';
 import Home from './home';
 import Register from './register';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { AuthContext } from '../contexts/auth_context';
 
 SplashScreen.preventAutoHideAsync();
 
 const App: React.FC = () => {
 
-    const [logged, setLogged] = useState(false)
+    const { user } = useContext(AuthContext)
 
 
     let [fontsLoaded] = useFonts({
@@ -25,7 +26,7 @@ const App: React.FC = () => {
         return null;
     }
 
-    if (logged) {
+    if (user) {
         return <Home />
     }
 
