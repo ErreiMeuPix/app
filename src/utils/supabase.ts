@@ -11,3 +11,22 @@ export const SupabaseClient = createClient("http://127.0.0.1:54321", "eyJhbGciOi
         detectSessionInUrl: false,
     },
 });
+
+
+export const SupabaseGetPixKey = async (userId: string): Promise<string> => {
+    const { data, error } = await SupabaseClient
+        .from('pix_keys')
+        .select('pix_key')
+
+    console.log(userId, data, error)
+
+    if (error) {
+        throw error;
+    }
+
+    if (data) {
+        console.log(data)
+        return data[0] as unknown as string
+    }
+
+}

@@ -1,13 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
+import { AuthContext } from '../../contexts/auth_context';
 
 const Home: React.FC = () => {
     const rootPixInputRef = useRef<TextInput>();
+    const { user, refreshPix } = useContext(AuthContext)
 
-    const [rootPix, setRootPix] = useState('fulanodetal@loremipsun.com')
     const [iconName, setIconName] = useState('lock')
+
+    useEffect(() => {
+        refreshPix()
+    }, [])
 
     function onSavePix() {
         router.push('recover_step_one')
@@ -39,7 +44,7 @@ const Home: React.FC = () => {
                 <View style={styles.containerTop}>
                     <View style={styles.blankContainer}>
                         <View >
-                            <TextInput onChangeText={(e) => setRootPix(e)} ref={rootPixInputRef} style={styles.pixText} value={rootPix} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
+                            <TextInput onChangeText={(e) => console.log(e)} ref={rootPixInputRef} style={styles.pixText} value={user.pixKey} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
                             />
                             <Text style={styles.subtitlePix}>Enviaremos o seu dinheiro para essa chave PIX</Text>
                         </View>

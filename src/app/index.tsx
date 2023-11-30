@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SafeAreaView, View, Image, Text, Button } from 'react-native';
 import Home from './home';
 import Register from './register';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthContext } from '../contexts/auth_context';
+import { SupabaseClient } from '../utils/supabase';
 
 SplashScreen.preventAutoHideAsync();
 
