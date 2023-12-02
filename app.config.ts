@@ -21,8 +21,7 @@ export default ({ config
 	ios: {
 		supportsTablet: false,
 		bundleIdentifier: "app.erreimeupix",
-		buildNumber: "0.0.1",
-		icon: "./assets/images/icon.png"
+		buildNumber: "0.0.1"
 	},
 	android: {
 		package: "app.erreimeupix",
