@@ -7,9 +7,9 @@ import {
 } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
-    scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
     webClientId: '696135610397-fkuvhilff6sjhjn4747lvdho4rboib4j.apps.googleusercontent.com',
-    iosClientId: "696135610397-5shrtht51rebc1i4936pi66edhn6g47k.apps.googleusercontent.com"
+    iosClientId: "696135610397-5shrtht51rebc1i4936pi66edhn6g47k.apps.googleusercontent.com",
 });
 
 export type TUser = { id: string, name: string, accessToken: string, pixKey?: string }
@@ -48,7 +48,7 @@ export default function AuthProvider({ children }: any) {
             }
 
             const { data, error } = await SupabaseClient.auth.signInWithIdToken({ provider: 'google', token: userInfo.idToken })
-
+            console.log(data.session.access_token)
             if (error) {
                 throw error;
             }

@@ -3,7 +3,7 @@ import { decode } from "https://deno.land/x/djwt/mod.ts";
 export function recoverUserId(authorizationHeader: string): string {
     const [header, payload, signature] = decode(authorizationHeader);
 
-    return payload as string;
+    return payload.sub as string;
 }
 
 

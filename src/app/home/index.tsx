@@ -3,12 +3,14 @@ import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyb
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
 import { AuthContext } from '../../contexts/auth_context';
+import { SupabaseClient } from '../../utils/supabase'
 
 const Home: React.FC = () => {
     const rootPixInputRef = useRef<TextInput>();
     const { user, refreshPix } = useContext(AuthContext)
 
     const [iconName, setIconName] = useState('lock')
+    const [valuePix, setValuePix] = useState<string>('')
 
     useEffect(() => {
         refreshPix()
@@ -18,10 +20,13 @@ const Home: React.FC = () => {
         router.push('recover_step_one')
     }
 
-    function onUpdatePixKey() {
+    async function onUpdatePixKey() {
         if (rootPixInputRef.current.isFocused()) {
             if (true) {
-                //Se houver alteração na chave PIX, confirmar alteração para validar se deve ou não alterar
+                await SupabaseClient.functions.invoke('update-pix-key', {
+                    body: { pixKey: valuePix }
+                })
+                console.log('ta porra')
             }
 
 
@@ -44,7 +49,7 @@ const Home: React.FC = () => {
                 <View style={styles.containerTop}>
                     <View style={styles.blankContainer}>
                         <View >
-                            <TextInput onChangeText={(e) => console.log(e)} ref={rootPixInputRef} style={styles.pixText} value={user.pixKey} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
+                            <TextInput onChangeText={(e) => setValuePix(e)} ref={rootPixInputRef} style={styles.pixText} value={user.pixKey} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
                             />
                             <Text style={styles.subtitlePix}>Enviaremos o seu dinheiro para essa chave PIX</Text>
                         </View>
