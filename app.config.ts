@@ -21,7 +21,14 @@ export default ({ config
 	ios: {
 		supportsTablet: false,
 		bundleIdentifier: "app.erreimeupix",
-		buildNumber: "0.0.1"
+		buildNumber: "0.0.1",
+		infoPlist: {
+			CFBundleURLTypes: [
+				{
+					CFBundleURLSchemes: ["com.googleusercontent.apps.696135610397-5shrtht51rebc1i4936pi66edhn6g47k"]
+				}
+			]
+		}
 	},
 	android: {
 		package: "app.erreimeupix",
