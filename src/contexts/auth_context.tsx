@@ -9,6 +9,7 @@ import {
 GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
     webClientId: '696135610397-fkuvhilff6sjhjn4747lvdho4rboib4j.apps.googleusercontent.com',
+    iosClientId: "696135610397-5shrtht51rebc1i4936pi66edhn6g47k.apps.googleusercontent.com"
 });
 
 export type TUser = { id: string, name: string, accessToken: string, pixKey?: string }
