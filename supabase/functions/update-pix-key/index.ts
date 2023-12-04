@@ -1,5 +1,10 @@
 import { supabaseClient } from "../_shared/supabaseClient.ts";
-import { recoverUserId, ResponseHandler } from "../_shared/utils.ts";
+import {
+  ErrorHandler,
+  HandlerDangerLogger,
+  recoverUserId,
+  ResponseHandler,
+} from "../_shared/utils.ts";
 import { PixKey } from "../_shared/entities/pixKey.ts";
 
 Deno.serve(async (req) => {
@@ -12,7 +17,14 @@ Deno.serve(async (req) => {
     );
 
     if (!authorization) {
-      throw new Error("Invalid auth format");
+      console.log(
+        HandlerDangerLogger({
+          message: "Invalid auth detected",
+          plusMessage: "Pix register",
+          status: 400,
+        }),
+      );
+      return ErrorHandler("", "", 400);
     }
 
     const userId = recoverUserId(authorization);
@@ -20,7 +32,7 @@ Deno.serve(async (req) => {
     const pix = new PixKey(pixKey);
 
     if (!pix.valid()) {
-      throw new Error("Invalid pix formatt");
+      return ErrorHandler("INVALID", "Invalid format", 422);
     }
 
     const { data } = await supabaseClient
@@ -29,7 +41,7 @@ Deno.serve(async (req) => {
       .eq("pix_key", pix.value);
 
     if (data && data.length > 0) {
-      return ResponseHandler("Pix key is already being used", 422);
+      return ErrorHandler("SAME_KEY", "Pix key is already being used", 412);
     }
 
     const { data: userDatabasePix } = await supabaseClient
@@ -37,22 +49,45 @@ Deno.serve(async (req) => {
       .select()
       .eq("user_id", userId);
 
-    if (userDatabasePix) {
-      await supabaseClient
+    if (userDatabasePix && userDatabasePix.length > 0) {
+      const { error } = await supabaseClient
         .from("pix_keys")
         .update({ pix_key: pix.value })
-        .eq("userId", userId);
+        .eq("user_id", userId);
+
+      if (error) {
+        console.log(
+          HandlerDangerLogger({
+            message: error.message,
+            plusMessage: error.code,
+            status: 500,
+          }),
+        );
+        return ErrorHandler("UNEXPECTED", "Unexpected error ocurred", 500);
+      }
     } else {
-      await supabaseClient
+      const { error } = await supabaseClient
         .from("pix_keys")
         .insert([
           {
             id: crypto.randomUUID(),
-            created_at: Date.now(),
+            created_at: new Date(),
             user_id: userId,
             pix_key: pix.value,
           },
         ]);
+
+      if (error) {
+        console.log(
+          HandlerDangerLogger({
+            message: error.message,
+            plusMessage: error.code,
+            status: 500,
+          }),
+        );
+
+        return ErrorHandler("UNEXPECTED", "Unexpected error ocurred", 500);
+      }
     }
 
     return ResponseHandler(null, 200);
