@@ -2,15 +2,15 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
-import { AuthContext } from '../../contexts/auth_context';
-import { SupabaseClient } from '../../utils/supabase'
+import { AuthContext } from '../../contexts/auth_context.tsx';
+import { SupabaseClient } from '../../utils/supabase.ts'
 
 const Home: React.FC = () => {
     const rootPixInputRef = useRef<TextInput>();
     const { user, refreshPix } = useContext(AuthContext)
 
     const [iconName, setIconName] = useState('lock')
-    const [valuePix, setValuePix] = useState<string>('')
+    const [valuePix, setValuePix] = useState<string>(user.pixKey ?? "")
 
     useEffect(() => {
         refreshPix()
@@ -21,26 +21,34 @@ const Home: React.FC = () => {
     }
 
     async function onUpdatePixKey() {
-        if (rootPixInputRef.current.isFocused()) {
-            if (true) {
-                await SupabaseClient.functions.invoke('update-pix-key', {
-                    body: { pixKey: valuePix }
-                })
-                console.log('ta porra')
+        try {
+            if (rootPixInputRef.current.isFocused()) {
+
+                if (user?.pixKey.localeCompare(valuePix, undefined, { sensitivity: 'accent' }) !== 0) {
+                    await SupabaseClient.functions.invoke('update-pix-key', {
+                        body: { pixKey: valuePix }
+                    })
+
+                    refreshPix()
+                    // TODO: Notificar chave pix atualizada com sucesso
+                } else {
+                    setValuePix(user.pixKey)
+                    //TODO: Notificar que a chave PIX é igual
+                }
+
+                Keyboard.dismiss()
+
+                setIconName('lock')
+
+
+                return
             }
 
+            rootPixInputRef.current.focus()
 
-            Keyboard.dismiss()
-
-            setIconName('lock')
-
-
-            return
+            setIconName('unlock')
+        } catch (error) {
         }
-
-        rootPixInputRef.current.focus()
-
-        setIconName('unlock')
     }
 
     return (
@@ -49,7 +57,7 @@ const Home: React.FC = () => {
                 <View style={styles.containerTop}>
                     <View style={styles.blankContainer}>
                         <View >
-                            <TextInput onChangeText={(e) => setValuePix(e)} ref={rootPixInputRef} style={styles.pixText} value={user.pixKey} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
+                            <TextInput onChangeText={(e: string) => setValuePix(e)} ref={rootPixInputRef} style={styles.pixText} value={valuePix} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
                             />
                             <Text style={styles.subtitlePix}>Enviaremos o seu dinheiro para essa chave PIX</Text>
                         </View>

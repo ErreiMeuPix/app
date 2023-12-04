@@ -5,7 +5,7 @@ import {
   recoverUserId,
   ResponseHandler,
 } from "../_shared/utils.ts";
-import { PixKey } from "../_shared/entities/pixKey.ts";
+import { PixKey } from "../_shared/entities/pixKey.js";
 
 Deno.serve(async (req) => {
   try {
@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
     );
 
     if (!authorization) {
-      console.log(
+      console.error(
         HandlerDangerLogger({
           message: "Invalid auth detected",
           plusMessage: "Pix register",
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
         .eq("user_id", userId);
 
       if (error) {
-        console.log(
+        console.error(
           HandlerDangerLogger({
             message: error.message,
             plusMessage: error.code,
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
         ]);
 
       if (error) {
-        console.log(
+        console.error(
           HandlerDangerLogger({
             message: error.message,
             plusMessage: error.code,
