@@ -7,7 +7,7 @@ export function recoverUserId(authorizationHeader: string): string {
 }
 
 
-export function SuccessResponse(data: any, status: number) {
+export function ResponseHandler(data: any, status: number) {
     return new Response(
         JSON.stringify(data),
         { headers: { "Content-Type": "application/json" }, status: status },
