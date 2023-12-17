@@ -5,7 +5,7 @@ import {
   recoverUserId,
   ResponseHandler,
 } from "../_shared/utils.ts";
-import { PixKey } from "../_shared/entities/pixKey.js";
+import { PixKey } from "../_shared/entities/pixKey.ts";
 
 Deno.serve(async (req) => {
   try {

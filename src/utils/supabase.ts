@@ -29,3 +29,9 @@ export const SupabaseGetPixKey = async (userId: string): Promise<string> => {
     return data[0].pix_key as unknown as string;
   }
 };
+
+export async function SupabaseUpdatePixKey(value: string) {
+  await SupabaseClient.functions.invoke("update-pix-key", {
+    body: { pixKey: value },
+  });
+}

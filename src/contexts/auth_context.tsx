@@ -48,10 +48,12 @@ export default function AuthProvider({ children }: any) {
             }
 
             const { data, error } = await SupabaseClient.auth.signInWithIdToken({ provider: 'google', token: userInfo.idToken })
-            console.log(data.session.access_token)
+
             if (error) {
                 throw error;
             }
+
+            console.log(data.session.access_token)
 
             setUser({ name: userInfo.user.name, accessToken: data.session.access_token, id: data.user.id })
 
