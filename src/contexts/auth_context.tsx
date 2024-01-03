@@ -27,14 +27,9 @@ export default function AuthProvider({ children }: any) {
     const [user, setUser] = useState<TUser>(null)
 
     const refreshPix = async () => {
-        try {
-            const valuePix = await SupabaseGetPixKey(user.id);
+        const valuePix = await SupabaseGetPixKey(user.id);
 
-            setUser({ ...user, pixKey: valuePix })
-        } catch (error) {
-            // TODO: Ocorreu um erro ao recuperar a sua cahve PIX
-        }
-
+        setUser({ ...user, pixKey: valuePix })
     }
 
     const signIn = async () => {
@@ -53,11 +48,11 @@ export default function AuthProvider({ children }: any) {
                 throw error;
             }
 
-            console.log(data.session.access_token)
-
             setUser({ name: userInfo.user.name, accessToken: data.session.access_token, id: data.user.id })
 
         } catch (error: any) {
+
+
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -65,7 +60,6 @@ export default function AuthProvider({ children }: any) {
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
                 // play services not available or outdated
             } else {
-                // some other error happened
             }
 
             throw error

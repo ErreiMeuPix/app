@@ -6,12 +6,15 @@ import { AuthContext } from '../../contexts/auth_context';
 import { TextInputMask } from 'react-native-masked-text';
 import { showFlash } from 'flash-notify'
 import { NotifyColors } from '../../../assets/colors/notify-colors';
+import { Spinner } from '../../components/spinner';
+import { router } from 'expo-router'
 
 const RecoverSteptTwo: React.FC = () => {
     const { user } = useContext(AuthContext)
 
     const [pixKey, setPixKey] = useState<string | null>(null)
     const [amount, setAmount] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false)
 
     async function handleReqPixSave() {
         if (!pixKey || pixKey.trim() == '') {
@@ -19,9 +22,9 @@ const RecoverSteptTwo: React.FC = () => {
             return
         }
 
-        const amountParsed = Number(amount?.split(',').join('.'))
+        const amountParsed = parseFloat(amount?.replace(/\./g, '').replace(',', '.'))
 
-        if (!amount || amountParsed < 1) {
+        if (!amountParsed || amountParsed < 1) {
             showFlash({ desc: 'O valor mínimo é de R$ 1,00', title: 'Valor mínimo', customColors: NotifyColors.WARNING })
             return
         }
@@ -34,15 +37,28 @@ const RecoverSteptTwo: React.FC = () => {
             showFlash({ desc: 'Não é uma chave PIX válida', title: 'Tipo de chave inválido', customColors: NotifyColors.WARNING })
             return;
         }
+
         try {
+            setLoading(true)
+
             await SupabaseCreatePixRequest(
                 pixKey,
                 keyType,
                 user.id,
                 user.pixKey,
-                amountParsed)
+                amountParsed
+            )
+
+            router.push('success_request')
         } catch (error) {
+            if (error?.code == 23505) {
+                showFlash({ desc: 'Sua solicitação já está em andamento', title: 'Solicitação em andamento', customColors: NotifyColors.WARNING })
+                return
+            }
+
             showFlash({ desc: 'Não conseguimos processar a sua solicitação', title: 'Ocorreu um erro', customColors: NotifyColors.DANGER })
+        } finally {
+            setLoading(false)
         }
 
     }
@@ -57,7 +73,7 @@ const RecoverSteptTwo: React.FC = () => {
 
     return (
         <View style={{ flex: 1, alignItems: 'flex-start', backgroundColor: '#0DDF5F', padding: 20 }}>
-
+            <Spinner loading={loading} />
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.keyboardAvoidingView}>
@@ -107,7 +123,7 @@ const styles = StyleSheet.create({
     subtitleOne: { color: 'white', fontSize: 35, fontFamily: 'Bold', top: '10%' },
     subtitleTwo: { color: 'white', fontSize: 25, fontFamily: 'Light', alignSelf: 'center', top: '25%' },
     subtitlePixTypes: { color: '#17ac50', fontSize: 12, fontFamily: 'SemiBold', alignSelf: 'center', top: '28%' },
-    subtitleAmount: { color: '#17ac50', fontSize: 12, fontFamily: 'SemiBold', alignSelf: 'center', top: '55%' },
+    subtitleAmount: { color: '#17ac50', fontSize: 12, fontFamily: 'SemiBold', alignSelf: 'center', top: '50%' },
     saveMyPixText: { color: '#006F2B', fontSize: 15, fontFamily: 'Bold' },
     saveMyPix: {
         backgroundColor: '#00993C',
@@ -121,7 +137,7 @@ const styles = StyleSheet.create({
         shadowRadius: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row', top: '140%'
+        flexDirection: 'row', top: '115%'
     }
 });
 

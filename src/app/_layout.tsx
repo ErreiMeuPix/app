@@ -17,13 +17,18 @@ export default function Layout() {
                 />
                 <Stack.Screen
                     name='home/index'
+                    options={{ gestureEnabled: false }}
                 />
                 <Stack.Screen
                     name='recover_step_one/index'
-                />'
+                />
                 <Stack.Screen
                     name='recover_step_two/index'
-                />'
+                />
+                <Stack.Screen
+                    name='success_request/index'
+                    options={{ gestureEnabled: false }}
+                />
             </Stack>
         </AuthProvider>
     )

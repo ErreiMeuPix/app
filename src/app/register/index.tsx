@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { SafeAreaView, View, Image, Text, Button, TouchableOpacity, } from 'react-native';
 import { AuthContext } from '../../contexts/auth_context';
+import { showFlash } from 'flash-notify'
+import { NotifyColors } from '../../../assets/colors/notify-colors';
 
 
 const Register: React.FC = () => {
@@ -11,9 +13,8 @@ const Register: React.FC = () => {
         try {
             await signIn()
         } catch (error) {
-            //TODO: Adicionar balao de notificacao
+            showFlash({ desc: 'Tente novamente mais tarde, por favor', title: 'Impossível fazer login', customColors: NotifyColors.WARNING })
         }
-
     }
 
     return (

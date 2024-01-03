@@ -26,7 +26,7 @@ export const SupabaseGetPixKey = async (userId: string): Promise<string> => {
   }
 
   if (data) {
-    return data[0].pix_key as unknown as string;
+    return data[0]?.pix_key as unknown as string ?? "";
   }
 };
 

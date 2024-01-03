@@ -3,8 +3,7 @@ import Home from './home';
 import Register from './register';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { AuthContext } from '../contexts/auth_context.tsx';
-import { SupabaseClient } from '../utils/supabase.ts';
+import { AuthContext } from '../contexts/auth_context';
 
 SplashScreen.preventAutoHideAsync();
 

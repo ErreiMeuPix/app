@@ -1,20 +1,49 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
 import { AuthContext } from '../../contexts/auth_context';
 import { SupabaseUpdatePixKey } from '../../utils/supabase'
+import { showFlash } from 'flash-notify'
+import { NotifyColors } from '../../../assets/colors/notify-colors';
+import { Spinner } from '../../components/spinner';
 
 const Home: React.FC = () => {
     const rootPixInputRef = useRef<TextInput>();
     const { user, refreshPix } = useContext(AuthContext)
 
     const [iconName, setIconName] = useState<'lock' | 'unlock'>('lock')
-    const [valuePix, setValuePix] = useState<string>(user?.pixKey ?? "")
+    const [valuePix, setValuePix] = useState<string>("")
+    const [loading, setLoading] = useState(false)
+
 
     useEffect(() => {
-        refreshPix()
+        (async function refreshUserPix() {
+            try {
+                setLoading(true)
+                await refreshPix()
+            } catch (error) {
+                showFlash({ desc: 'Não conseguimos recuperar sua chave PIX', title: 'Erro nos servidores', customColors: NotifyColors.WARNING })
+            } finally {
+                setLoading(false)
+            }
+        }
+        )()
+
     }, [])
+
+    useEffect(() => {
+        if (user?.pixKey) {
+            setValuePix(user?.pixKey)
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (iconName == 'unlock') {
+            rootPixInputRef.current.focus()
+        }
+
+    }, [iconName])
 
     function onSavePix() {
         router.push('recover_step_one')
@@ -24,38 +53,49 @@ const Home: React.FC = () => {
         try {
             if (rootPixInputRef.current.isFocused()) {
 
-                if (user?.pixKey.localeCompare(valuePix, undefined, { sensitivity: 'accent' }) !== 0) {
-                    await SupabaseUpdatePixKey(valuePix)
+                if (user?.pixKey?.localeCompare(valuePix, undefined, { sensitivity: 'accent' }) !== 0) {
 
+                    setLoading(true)
+
+                    await SupabaseUpdatePixKey(valuePix)
                     refreshPix()
-                    // TODO: Notificar chave pix atualizada com sucesso
                 } else {
                     setValuePix(user.pixKey)
-                    //TODO: Notificar que a chave PIX é igual
                 }
 
                 Keyboard.dismiss()
 
                 setIconName('lock')
 
+                showFlash({ desc: 'Chave PIX atualizada com sucesso', title: '', customColors: NotifyColors.SUCCESS })
 
                 return
             }
-
-            rootPixInputRef.current.focus()
-
             setIconName('unlock')
         } catch (error) {
+            showFlash({ desc: 'Já já tudo volta ao normal', title: 'Ocorreu um erro', customColors: NotifyColors.DANGER })
+        } finally {
+            setLoading(false)
         }
     }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+            <Spinner loading={loading} />
             <View style={styles.containerWrapper}>
                 <View style={styles.containerTop}>
                     <View style={styles.blankContainer}>
                         <View >
-                            <TextInput onChangeText={(e: string) => setValuePix(e)} ref={rootPixInputRef} style={styles.pixText} value={valuePix} numberOfLines={1} keyboardType='ascii-capable' blurOnSubmit={false}
+                            <TextInput
+                                editable={iconName == 'unlock'}
+                                onChangeText={(e: string) => setValuePix(e)}
+                                ref={rootPixInputRef}
+                                style={styles.pixText}
+                                value={valuePix}
+                                numberOfLines={1}
+                                placeholder='Cadastre sua chave'
+                                keyboardType='ascii-capable'
+                                blurOnSubmit={false}
                             />
                             <Text style={styles.subtitlePix}>Enviaremos o seu dinheiro para essa chave PIX</Text>
                         </View>
@@ -63,7 +103,14 @@ const Home: React.FC = () => {
                             <TouchableOpacity
                                 onPress={onUpdatePixKey}
                                 activeOpacity={0.9}
-                                style={{ backgroundColor: '#4B4B4B', height: 40, width: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 50, }}
+                                style={{
+                                    backgroundColor: iconName == 'unlock' ? '#3B8959' : '#4B4B4B',
+                                    height: 40,
+                                    width: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: 50,
+                                }}
                             >
                                 <Feathers
                                     name={iconName}
@@ -90,7 +137,9 @@ const Home: React.FC = () => {
                     </View>
 
                 </View>
-                <View style={styles.containerBottom}></View>
+                <View style={styles.containerBottom}>
+                    <Text style={styles.requestsText}>Solicitações</Text>
+                </View>
             </View>
         </SafeAreaView >
     );
@@ -98,10 +147,11 @@ const Home: React.FC = () => {
 
 const styles = StyleSheet.create({
     pixText: { color: '#737373', fontSize: 15, fontFamily: 'SemiBold' },
+    requestsText: { backgroundColor: '#E8E8E8', paddingHorizontal: 10, paddingVertical: 5, marginTop: '2%', borderRadius: 5, color: '#A3A3A3', fontFamily: 'SemiBold' },
     subtitlePix: { color: '#C7C7C7', fontSize: 12, top: 5, fontFamily: 'Light' },
     containerWrapper: { backgroundColor: '#0DDF5F', flex: 1 },
     containerTop: { backgroundColor: '#0DDF5F', flex: 1, justifyContent: 'center', alignItems: 'center' },
-    containerBottom: { backgroundColor: '#FFFFFF', flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25 },
+    containerBottom: { backgroundColor: '#FFFFFF', flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25, alignItems: 'center' },
     blankContainer: { borderRadius: 10, backgroundColor: '#FFFFFF', width: '90%', height: '50%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-evenly' },
     saveMyPixText: { color: '#FFFFFF', fontSize: 20, fontFamily: 'Bold' },
     saveMyPix: {
