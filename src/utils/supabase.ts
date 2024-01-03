@@ -35,3 +35,25 @@ export async function SupabaseUpdatePixKey(value: string) {
     body: { pixKey: value },
   });
 }
+
+export async function SupabaseCreatePixRequest(
+  pixKey: string,
+  pix_type: number,
+  userId: string,
+  userPixKey: string,
+  amount: number,
+) {
+  const { data, error } = await SupabaseClient
+    .from("pix_requests")
+    .insert({
+      user_id: userId,
+      user_pix_key: userPixKey,
+      end_pix_key: pixKey,
+      pix_amount: amount,
+      end_pix_key_type: pix_type,
+    });
+
+  if (error) {
+    throw error;
+  }
+}

@@ -1,16 +1,16 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
 import { AuthContext } from '../../contexts/auth_context';
-import { SupabaseClient, SupabaseUpdatePixKey } from '../../utils/supabase'
+import { SupabaseUpdatePixKey } from '../../utils/supabase'
 
 const Home: React.FC = () => {
     const rootPixInputRef = useRef<TextInput>();
     const { user, refreshPix } = useContext(AuthContext)
 
     const [iconName, setIconName] = useState<'lock' | 'unlock'>('lock')
-    const [valuePix, setValuePix] = useState<string>(user.pixKey ?? "")
+    const [valuePix, setValuePix] = useState<string>(user?.pixKey ?? "")
 
     useEffect(() => {
         refreshPix()

@@ -1,9 +1,12 @@
 import { Stack } from 'expo-router';
 import AuthProvider from '../contexts/auth_context';
+import FlashComponent from 'flash-notify'
 
 export default function Layout() {
     return (
         <AuthProvider>
+            <FlashComponent />
+
             <Stack
                 screenOptions={{
                     headerShown: false
