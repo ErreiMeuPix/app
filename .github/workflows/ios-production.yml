@@ -42,12 +42,6 @@ jobs:
         run: yarn install
 
       - name: 🚀 Build Version
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID}}
-          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
-					PROJECT_EAS_ID: ${{ secrets.PROJECT_EAS_ID }}
         run: |
           SUPABASE_URL=${{ secrets.SUPABASE_URL }} SUPABASE_KEY=${{ secrets.SUPABASE_KEY}} GOOGLE_WEB_CLIENT_ID=${{ secrets.GOOGLE_WEB_CLIENT_ID }} GOOGLE_IOS_CLIENT_ID=${{ secrets.GOOGLE_IOS_CLIENT_ID }} PROJECT_EAS_ID=${{secrets.PROJECT_EAS_ID}} eas build --platform ios --profile production --non-interactive
         # Use in-line environment because using this mode can pass to eas server for using in build
