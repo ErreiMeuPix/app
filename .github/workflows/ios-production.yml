@@ -42,9 +42,9 @@ jobs:
         run: |
          yarn install
 
-      - name: 🚀 Build Version
-        run: |
-          eas build --platform ios --profile production --non-interactive
+      # - name: 🚀 Build Version
+      #   run: |
+      #     eas build --platform ios --profile production --non-interactive
         # Use in-line environment because using this mode can pass to eas server for using in build
 
       - name: 📦 Download Build IPA
