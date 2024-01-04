@@ -21,7 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: false,
     bundleIdentifier: "app.erreimeupix",
-    buildNumber: "0.0.1",
+    buildNumber: "0.0.2",
     infoPlist: {
       CFBundleURLTypes: [
         {
