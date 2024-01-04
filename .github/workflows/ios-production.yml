@@ -36,7 +36,7 @@ jobs:
 
       - name: 🏗 Download S3 EAS Environment
         run: |
-          aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
+          aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
 
       - name: 📦 Install dependencies
         run: |

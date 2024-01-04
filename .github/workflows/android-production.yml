@@ -34,6 +34,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+			- name: 🏗 Download S3 EAS Environment
+        run: |
+          aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
+
       - name: 📦 Install dependencies
         run: yarn install
 
@@ -42,11 +46,11 @@ jobs:
           aws s3 cp s3://errei-meu-pix/devops/android/pc-api-4645832410875810463-754-d807856b6c63.json google-key-account.json
 
       - name: 🚀 Build and Publish New Version
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID}}
-          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
+        # env:
+        #   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        #   SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        #   GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID}}
+        #   GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
         run: |
           eas build --platform android --profile production --non-interactive --local
           eas submit --platform android --profile production --path "$(find /home/runner/work/app/app/ -name '*.aab')" --non-interactive
