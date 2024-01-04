@@ -38,9 +38,9 @@ jobs:
         run: |
           aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
 
-      # - name: 📦 Install dependencies
-      #   run: |
-      #    yarn install
+      - name: 📦 Install dependencies
+        run: |
+         yarn install
 
       # - name: 🚀 Build Version
       #   run: |
