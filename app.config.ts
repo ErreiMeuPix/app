@@ -11,6 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   updates: {
     fallbackToCacheTimeout: 0,
   },
+  icon: "./assets/icon.png",
   splash: {
     image: "./assets/splash.png",
     resizeMode: "contain",
