@@ -39,10 +39,12 @@ jobs:
       #     aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
 
       - name: 📦 Install dependencies
-        run: yarn install
+        run: |
+        	yarn install
 
 			- name: 📦 Install dotenv-cli
-				run: yarn global add dotenv-cli
+        run: |
+        	yarn global add dotenv-cli
 
       - name: 📦 'Create env file'
         run: |
