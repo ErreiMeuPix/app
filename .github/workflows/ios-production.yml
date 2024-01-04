@@ -40,11 +40,11 @@ jobs:
 
       - name: 📦 Install dependencies
         run: |
-        	yarn install
+         yarn install
 
-			- name: 📦 Install dotenv-cli
+      - name: 📦 Install dotenv-cli
         run: |
-        	yarn global add dotenv-cli
+         yarn global add dotenv-cli
 
       - name: 📦 'Create env file'
         run: |
