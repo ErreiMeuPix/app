@@ -4,7 +4,6 @@ import Register from './register';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthContext } from '../contexts/auth_context';
-import Constants from "expo-constants";
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
 import { SupabaseClient, SupabaseGetPixKey } from '../utils/supabase'
-import Constants from "expo-constants";
 
 import {
     GoogleSignin,
@@ -9,8 +8,8 @@ import {
 
 GoogleSignin.configure({
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-    webClientId: Constants.expoConfig?.extra?.GOOGLE_WEB_CLIENT_ID,
-    iosClientId: Constants.expoConfig?.extra?.GOOGLE_IOS_CLIENT_ID,
+    webClientId: process.env.GOOGLE_WEB_CLIENT_ID,
+    iosClientId: process.env.GOOGLE_IOS_CLIENT_ID,
 });
 
 export type TUser = { id: string, name: string, accessToken: string, pixKey?: string }
