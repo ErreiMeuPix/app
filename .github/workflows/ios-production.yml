@@ -1,0 +1,105 @@
+name: 🚀 PROD IOS - Build | Publish Store
+
+on:
+  workflow_dispatch:
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🏗 Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # - name: 🏗 Download S3 EAS Environment
+      #   run: |
+      #     aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🚀 Build Version
+        run: |
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }} SUPABASE_KEY=${{ secrets.SUPABASE_KEY}} GOOGLE_WEB_CLIENT_ID=${{ secrets.GOOGLE_WEB_CLIENT_ID }} GOOGLE_IOS_CLIENT_ID=${{ secrets.GOOGLE_IOS_CLIENT_ID }} eas build --platform ios --profile production --non-interactive
+        # Use in-line environment because using this mode can pass to eas server for using in build
+
+      - name: 📦 Download Build IPA
+        run: |
+          sudo apt-get update
+          sudo apt-get install wget
+          wget -O app.ipa $(eas build:list --json --non-interactive --limit=1 --platform=ios | jq '.[0].artifacts.buildUrl' | sed 's/"//g')
+
+      - name: 📦 Upload do artefato
+        uses: actions/upload-artifact@v2
+        with:
+         name: appbuild
+         path: ./app.ipa
+
+  APPLE_STORE_TRANSPORT:
+    needs: Build
+    runs-on:  macos-latest
+    steps:
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: appbuild
+
+      - name: 🏗 Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: 📦 Download and Install Fastlane Key Apple Store
+        run: |
+          aws s3 cp s3://errei-meu-pix/devops/ios/fastlane-key-ios.json fastlane-key-ios.json
+          brew install fastlane
+          fastlane update_fastlane
+
+      - name: 🚀 Fastlane Publish Apple Store
+        run: fastlane deliver --verbose --ipa "app.ipa" --skip_screenshots --skip_metadata --precheck_include_in_app_purchases false --api_key_path ./fastlane-key-ios.json
+
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: appbuild
+
+      # # PUT IF RELEASE BRANCHS
+      # - name: 📦 Extract Branch Name
+      #   shell: bash
+      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      #   id: extract_branch
+
+      # - name: 🔀 Automatic Merge Into Main
+      #   uses: mtanzi/action-automerge@v1
+      #   # if: github.ref == 'refs/heads/release'
+      #   with:
+      #     github_token: ${{ github.token }}
+      #     source: ${{ steps.extract_branch.outputs.branch }}
+      #     target: 'main'
+      #     webhook_url: #if present add the Slack webhook
+
+

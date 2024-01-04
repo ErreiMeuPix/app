@@ -14,8 +14,14 @@
       "distribution": "internal"
     },
     "production": {
-      "channel": "production",
-      "env": {}
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-key-account.json"
+      }
     }
   }
 }

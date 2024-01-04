@@ -1,0 +1,72 @@
+name: 🚀 PROD Android - Build | Publish Store
+
+on:
+  workflow_dispatch:
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v2
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🏗 Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🏗 Download S3 File To Publish In Google Play
+        run: |
+          aws s3 cp s3://errei-meu-pix/devops/android/pc-api-4645832410875810463-754-d807856b6c63.json google-key-account.json
+
+			# Já esta na pasta
+      # - name: 🏗 Download S3 EAS Environment
+      #   run: |
+      #     aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
+
+      - name: 🚀 Build and Publish New Version
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID}}
+          GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
+        run: |
+          eas build --platform android --profile production --non-interactive --local
+          eas submit --platform android --profile production --path "$(find /home/runner/work/app/app/ -name '*.aab')" --non-interactive
+
+      # PUT IF RELEASE BRANCHS
+      - name: 📦 Extract Branch Name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: 🔀 Automatic Merge Into Main
+        uses: mtanzi/action-automerge@v1
+        with:
+          github_token: ${{ github.token }}
+          source: ${{ steps.extract_branch.outputs.branch }}
+          target: 'main'
+          webhook_url: #if present add the Slack webhook
