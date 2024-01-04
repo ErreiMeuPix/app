@@ -3,7 +3,7 @@ import "dotenv/config";
 import { ConfigContext, ExpoConfig } from "@expo/config";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "ErreiMeuPix",
+  name: "Errei Meu Pix",
   owner: "erreimeupix",
   slug: "erreimeupix",
   scheme: "erreimeupix",
