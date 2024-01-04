@@ -34,31 +34,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # - name: 🏗 Download S3 EAS Environment
-      #   run: |
-      #     aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
+      - name: 🏗 Download S3 EAS Environment
+        run: |
+          aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
 
       - name: 📦 Install dependencies
         run: |
          yarn install
 
-      - name: 📦 Install dotenv-cli
-        run: |
-         yarn global add dotenv-cli
-
-      - name: 📦 'Create env file'
-        run: |
-          touch .env
-          echo SUPABASE_URL=${{ secrets.SUPABASE_URL }} >> .env
-          echo SUPABASE_KEY=${{ secrets.SUPABASE_KEY }} >> .env
-          echo GOOGLE_WEB_CLIENT_ID=${{ secrets.GOOGLE_WEB_CLIENT_ID }} >> .env
-          echo GOOGLE_IOS_CLIENT_ID=${{ secrets.GOOGLE_IOS_CLIENT_ID }} >> .env
-          echo PROJECT_EAS_ID=${{ secrets.PROJECT_EAS_ID }} >> .env
-          cat .env
-
       - name: 🚀 Build Version
         run: |
-          dotenv -e .env -- eas build --platform ios --profile production --non-interactive
+          eas build --platform ios --profile production --non-interactive
         # Use in-line environment because using this mode can pass to eas server for using in build
 
       - name: 📦 Download Build IPA
