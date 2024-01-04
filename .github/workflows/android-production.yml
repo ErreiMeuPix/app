@@ -11,7 +11,6 @@ jobs:
         node-version: [14.x]
 
     steps:
-
       - name: 🏗 Setup repo
         uses: actions/checkout@v2
 
@@ -41,11 +40,6 @@ jobs:
       - name: 🏗 Download S3 File To Publish In Google Play
         run: |
           aws s3 cp s3://errei-meu-pix/devops/android/pc-api-4645832410875810463-754-d807856b6c63.json google-key-account.json
-
-			# Já esta na pasta
-      # - name: 🏗 Download S3 EAS Environment
-      #   run: |
-      #     aws s3 cp s3://klubbs-devops/expo/klubbs-establishment/eas.json eas.json
 
       - name: 🚀 Build and Publish New Version
         env:
