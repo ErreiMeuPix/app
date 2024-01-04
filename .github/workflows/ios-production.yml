@@ -38,9 +38,9 @@ jobs:
         run: |
           aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
 
-      - name: 📦 Install dependencies
-        run: |
-         yarn install
+      # - name: 📦 Install dependencies
+      #   run: |
+      #    yarn install
 
       # - name: 🚀 Build Version
       #   run: |
@@ -51,6 +51,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install wget
+
+					# Lê a propriedade desejada do arquivo JSON e a armazena em uma variável de ambiente
+
+					export PROJECT_EAS_ID=$(cat ./eas.json | jq -r '.build.production.env.PROJECT_EAS_ID')
+
+					# Exibe o valor da variável de ambiente
+					echo "PROJECT_EAS_ID: $PROJECT_EAS_ID"
+
           wget -O app.ipa $(eas build:list --json --non-interactive --limit=1 --platform=ios | jq '.[0].artifacts.buildUrl' | sed 's/"//g')
 
       - name: 📦 Upload do artefato
