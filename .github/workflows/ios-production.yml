@@ -42,9 +42,9 @@ jobs:
         run: |
          yarn install
 
-      - name: 🚀 Build Version
-        run: |
-          eas build --platform ios --profile production --non-interactive
+  #    - name: 🚀 Build Version
+  #      run: |
+  #        eas build --platform ios --profile production --non-interactive
 
       - name: 📦 Configura envs
         run: |
