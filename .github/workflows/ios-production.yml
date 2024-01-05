@@ -45,12 +45,12 @@ jobs:
       - name: 🚀 Build Version
         run: |
           eas build --platform ios --profile production --non-interactive
-       
+
       - name: 📦 Configura envs
         run: |
-          export PROJECT_EAS_ID=$(cat ./eas.json | jq -r '.build.production.env.PROJECT_EAS_ID')
-          echo "PROJECT_EAS_ID: $PROJECT_EAS_ID"
-          
+          export EXPO_PUBLIC_PROJECT_EAS_ID=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_PROJECT_EAS_ID')
+          echo "EXPO_PUBLIC_PROJECT_EAS_ID: $EXPO_PUBLIC_PROJECT_EAS_ID"
+
       - name: 📦 Download Build IPA
         run: |
           sudo apt-get update

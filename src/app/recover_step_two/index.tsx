@@ -117,7 +117,7 @@ const RecoverSteptTwo: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
-    inputValue: { backgroundColor: 'white', width: '90%', alignSelf: 'center', height: 50, borderRadius: 5, fontFamily: 'Bold', paddingHorizontal: 10, color: '#5e5e5e', top: '45%', textAlign: 'center', fontSize: 18 },
+    inputValue: { backgroundColor: 'white', width: '90%', alignSelf: 'center', height: 50, borderRadius: 5, fontFamily: 'Bold', paddingHorizontal: 10, color: '#5e5e5e', top: '40%', textAlign: 'center', fontSize: 18 },
     amountInput: { width: '90%', alignSelf: 'center', height: 50, borderRadius: 5, fontFamily: 'Bold', paddingHorizontal: 10, color: '#02702c', top: '50%', textAlign: 'center', fontSize: 50 },
     keyboardAvoidingView: { flex: 1, width: '100%' },
     subtitleOne: { color: 'white', fontSize: 35, fontFamily: 'Bold', top: '10%' },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         shadowRadius: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row', top: '115%'
+        flexDirection: 'row', top: '120%'
     }
 });
 
