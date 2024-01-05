@@ -4,7 +4,8 @@ CREATE TABLE "public"."pix_keys" (
     user_id uuid REFERENCES auth.users NOT NULL,
     pix_key text not null,
     constraint pix_keys_pkey primary key (id),
-    constraint pix_keys_pix_key_key unique (pix_key)
+    constraint pix_keys_pix_key_key unique (pix_key),
+    constraint pix_keys_user_id_fkey foreign key (user_id) references auth.users (id)
   );
 
 
@@ -18,7 +19,7 @@ create table
     pix_amount numeric not null,
     end_pix_key_type text not null,
     constraint pix_requests_pkey primary key (id),
-    constraint pix_requests_end_pix_key_type_key unique (end_pix_key_type),
+    constraint pix_requests_end_pix_key unique (user_id, end_pix_key),
     constraint pix_requests_user_id_fkey foreign key (user_id) references auth.users (id)
   ) tablespace pg_default;
 
