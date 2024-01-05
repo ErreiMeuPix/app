@@ -55,6 +55,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install wget
+          eas init --non-interactive
           eas build:list --json --limit=1 --platform=ios --non-interactive
           wget -O app.ipa $(eas build:list --json --limit=1 --platform=ios --non-interactive | jq '.[0].artifacts.buildUrl' | sed 's/"//g')
 
