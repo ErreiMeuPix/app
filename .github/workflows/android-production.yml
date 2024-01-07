@@ -34,37 +34,44 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-			- name: 🏗 Download S3 EAS Environment
+      - name: 🏗 Download S3 EAS Environment
         run: |
           aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
-
-      - name: 📦 Install dependencies
-        run: yarn install
 
       - name: 🏗 Download S3 File To Publish In Google Play
         run: |
           aws s3 cp s3://errei-meu-pix/devops/android/pc-api-4645832410875810463-754-d807856b6c63.json google-key-account.json
 
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 📦 Configura envs
+        run: |
+          export EXPO_PUBLIC_PROJECT_EAS_ID=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_PROJECT_EAS_ID')
+          echo "EXPO_PUBLIC_PROJECT_EAS_ID: $EXPO_PUBLIC_PROJECT_EAS_ID"
+          export EXPO_PUBLIC_SUPABASE_URL=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_SUPABASE_URL')
+          echo "EXPO_PUBLIC_SUPABASE_URL: $EXPO_PUBLIC_SUPABASE_URL"
+          export EXPO_PUBLIC_SUPABASE_KEY=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_SUPABASE_KEY')
+          echo "EXPO_PUBLIC_SUPABASE_KEY: $EXPO_PUBLIC_SUPABASE_KEY"
+          export EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID')
+          echo "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: $EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID"
+          export EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID')
+          echo "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: $EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID"
+
       - name: 🚀 Build and Publish New Version
-        # env:
-        #   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        #   SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        #   GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID}}
-        #   GOOGLE_IOS_CLIENT_ID: ${{ secrets.GOOGLE_IOS_CLIENT_ID }}
         run: |
           eas build --platform android --profile production --non-interactive --local
           eas submit --platform android --profile production --path "$(find /home/runner/work/app/app/ -name '*.aab')" --non-interactive
 
       # PUT IF RELEASE BRANCHS
-      - name: 📦 Extract Branch Name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+#      - name: 📦 Extract Branch Name
+#        shell: bash
+#        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+#        id: extract_branch
 
-      - name: 🔀 Automatic Merge Into Main
-        uses: mtanzi/action-automerge@v1
-        with:
-          github_token: ${{ github.token }}
-          source: ${{ steps.extract_branch.outputs.branch }}
-          target: 'main'
-          webhook_url: #if present add the Slack webhook
+#      - name: 🔀 Automatic Merge Into Main
+#        uses: mtanzi/action-automerge@v1
+#        with:
+#          github_token: ${{ github.token }}
+#          source: ${{ steps.extract_branch.outputs.branch }}
+#          target: 'main'
