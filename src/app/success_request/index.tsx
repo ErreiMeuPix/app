@@ -2,6 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
+import { COLORS } from '../../../assets/colors/colors';
 
 
 const SuccessRequest: React.FC = () => {
@@ -25,7 +26,7 @@ const SuccessRequest: React.FC = () => {
             <View style={{ justifyContent: 'space-evenly', alignItems: 'center', flex: 1 }}>
                 <Feathers
                     name={'alert-octagon'}
-                    color='#184C2C'
+                    color={COLORS.BUTTON_HINT}
                     size={35}
                 />
 
@@ -41,14 +42,14 @@ const SuccessRequest: React.FC = () => {
 
 
 const styles = StyleSheet.create({
-    safeAreaWrapper: { flex: 1, backgroundColor: '#0DDF5F', padding: 10 },
-    subtitle: { color: 'white', fontSize: 25, fontFamily: 'Bold', marginTop: '5%' },
-    secondSubtitle: { color: 'white', fontSize: 13, fontFamily: 'Light', marginTop: '2%' },
-    alertSubtitle: { color: '#184C2C', fontSize: 15, fontFamily: 'Regular', textAlign: 'center' },
-    secondSecondSubtitle: { color: '#184C2C', fontSize: 13, fontFamily: 'Light', textAlign: 'center' },
+    safeAreaWrapper: { flex: 1, backgroundColor: COLORS.PRIMARY, padding: 10 },
+    subtitle: { color: COLORS.WHITE, fontSize: 25, fontFamily: 'Bold', marginTop: '5%' },
+    secondSubtitle: { color: COLORS.WHITE, fontSize: 13, fontFamily: 'Light', marginTop: '2%' },
+    alertSubtitle: { color: COLORS.BUTTON_HINT, fontSize: 15, fontFamily: 'Regular', textAlign: 'center' },
+    secondSecondSubtitle: { color: COLORS.BUTTON_HINT, fontSize: 13, fontFamily: 'Light', textAlign: 'center' },
     bold: { fontFamily: 'Bold' },
-    circle: { borderColor: '#184C2C', borderWidth: 10, width: 300, height: 300, borderRadius: 150, justifyContent: 'center', alignItems: 'center' },
+    circle: { borderColor: COLORS.PRIMARY_DARK, borderWidth: 10, width: 300, height: 300, borderRadius: 150, justifyContent: 'center', alignItems: 'center' },
     viewTouch: { justifyContent: 'center', alignItems: 'center', flex: 2.5 }
 });
 
-export default SuccessRequest 
+export default SuccessRequest

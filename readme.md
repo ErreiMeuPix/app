@@ -18,6 +18,12 @@ Após o build é necessário rodar o expo em modo dev
   npx expo start --dev-client
 ```
 
+É necessário modificar a versão de compilação no arquivo app.config.ts e também nos respectivos arquivos abaixo
+
+| Modelo            | Arquivo                                                          |
+| ----------------- | ---------------------------------------------------------------- |
+| IOS               | app.config.ts            |
+| ANDROID           | android/app/build.gralde |
 
 
 
@@ -25,10 +31,3 @@ Após o build é necessário rodar o expo em modo dev
 <!-- Rodar funcões EDGE sem verificar JWT -->
 npx supabase functions serve --no-verify-jwt
 ## Modificação de versões
-
-É necessário modificar a versão de compilação no arquivo app.config.ts e também nos respectivos arquivos abaixo
-
-| Modelo            | Arquivo                                                          |
-| ----------------- | ---------------------------------------------------------------- |
-| IOS               | app.config.ts            |
-| ANDROID           | android/app/build.gralde |

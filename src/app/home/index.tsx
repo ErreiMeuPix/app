@@ -7,6 +7,7 @@ import { SupabaseUpdatePixKey } from '../../utils/supabase'
 import { showFlash } from 'flash-notify'
 import { NotifyColors } from '../../../assets/colors/notify-colors';
 import { Spinner } from '../../components/spinner';
+import { COLORS } from '../../../assets/colors/colors';
 
 const Home: React.FC = () => {
 	const rootPixInputRef = useRef<TextInput>();
@@ -81,9 +82,9 @@ const Home: React.FC = () => {
 
 	return (
 		<>
-			<SafeAreaView style={{ flex: 0, backgroundColor: '#0DDF5F' }} />
+			<SafeAreaView style={{ flex: 0, backgroundColor: COLORS.PRIMARY }} />
 
-			<SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
 				<Spinner loading={loading} />
 				<View style={styles.containerWrapper}>
 					<View style={styles.containerTop}>
@@ -107,7 +108,7 @@ const Home: React.FC = () => {
 									onPress={onUpdatePixKey}
 									activeOpacity={0.9}
 									style={{
-										backgroundColor: iconName == 'unlock' ? '#3B8959' : '#4B4B4B',
+										backgroundColor: iconName == 'unlock' ? COLORS.PRIMARY_DARK : COLORS.SECUNDARY_LIGHT,
 										height: 40,
 										width: 40,
 										justifyContent: 'center',
@@ -117,7 +118,7 @@ const Home: React.FC = () => {
 								>
 									<Feathers
 										name={iconName}
-										color='#FFFFFF'
+										color={COLORS.WHITE}
 										size={18}
 									/>
 								</TouchableOpacity>
@@ -128,7 +129,7 @@ const Home: React.FC = () => {
 								style={styles.saveMyPix}>
 								<Feathers
 									name='pocket'
-									color='#FFFFFF'
+									color={COLORS.WHITE}
 									size={20}
 									style={{ right: '50%' }}
 								/>
@@ -141,7 +142,9 @@ const Home: React.FC = () => {
 
 					</View>
 					<View style={styles.containerBottom}>
-						<Text style={styles.requestsText}>Solicitações</Text>
+						<View style={styles.requestsCotnainer}>
+							<Text style={styles.requestsText}>Solicitações</Text>
+						</View>
 					</View>
 				</View>
 			</SafeAreaView >
@@ -151,23 +154,24 @@ const Home: React.FC = () => {
 }
 
 const styles = StyleSheet.create({
-	pixText: { color: '#737373', fontSize: 15, fontFamily: 'SemiBold' },
-	requestsText: { backgroundColor: '#E8E8E8', paddingHorizontal: 10, paddingVertical: 5, marginTop: '2%', borderRadius: 5, color: '#A3A3A3', fontFamily: 'SemiBold' },
-	subtitlePix: { color: '#C7C7C7', fontSize: 12, top: 5, fontFamily: 'Light' },
-	containerWrapper: { backgroundColor: '#0DDF5F', flex: 1 },
-	containerTop: { backgroundColor: '#0DDF5F', flex: 1, justifyContent: 'center', alignItems: 'center' },
-	containerBottom: { backgroundColor: '#FFFFFF', flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25, alignItems: 'center' },
-	blankContainer: { borderRadius: 10, backgroundColor: '#FFFFFF', width: '90%', height: '50%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-evenly' },
-	saveMyPixText: { color: '#FFFFFF', fontSize: 20, fontFamily: 'Bold' },
+	pixText: { color: COLORS.SECUNDARY, fontSize: 15, fontFamily: 'SemiBold' },
+	requestsText: { color: COLORS.WHITE, fontFamily: 'SemiBold' },
+	requestsCotnainer: { backgroundColor: COLORS.PRIMARY, paddingHorizontal: 10, paddingVertical: 5, marginTop: '2%', borderRadius: 5 },
+	subtitlePix: { color: COLORS.TEXT_GRAY, fontSize: 12, top: 5, fontFamily: 'Light' },
+	containerWrapper: { backgroundColor: COLORS.PRIMARY, flex: 1 },
+	containerTop: { backgroundColor: COLORS.PRIMARY, flex: 1, justifyContent: 'center', alignItems: 'center' },
+	containerBottom: { backgroundColor: COLORS.WHITE, flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25, alignItems: 'center' },
+	blankContainer: { borderRadius: 10, backgroundColor: COLORS.WHITE, width: '90%', height: '50%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-evenly' },
+	saveMyPixText: { color: COLORS.WHITE, fontSize: 20, fontFamily: 'Bold' },
 	saveMyPix: {
-		backgroundColor: '#0DDF5F',
+		backgroundColor: COLORS.PRIMARY,
 		borderRadius: 10,
 		width: '80%',
 		height: 50,
 		top: '80%',
 		left: '10%',
 		position: 'absolute',
-		shadowColor: '#3B8959',
+		shadowColor: COLORS.PRIMARY_DARK,
 		shadowOffset: { width: 0, height: 10 },
 		shadowOpacity: 1,
 		shadowRadius: 0,
