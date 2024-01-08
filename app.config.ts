@@ -33,8 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   android: {
-    package: "app.erreimeupix",
-    versionCode: 1,
+    package: "app.erreimeupix"
   },
   plugins: [
     [
