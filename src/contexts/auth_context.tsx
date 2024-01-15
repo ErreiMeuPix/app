@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { SupabaseClient, SupabaseGetPixKey } from '../utils/supabase'
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 import {
 	GoogleSignin,
@@ -17,6 +18,7 @@ export type TUser = { id: string, name: string, accessToken: string, pixKey?: st
 export const AuthContext = createContext(
 	{} as {
 		signIn: () => Promise<void>;
+		signInApple: () => Promise<void>;
 		refreshPix: () => Promise<void>
 		user: TUser
 	}
@@ -68,11 +70,49 @@ export default function AuthProvider({ children }: any) {
 		}
 	};
 
+	async function signInApple() {
+		try {
+
+			const credential = await AppleAuthentication.signInAsync({
+				requestedScopes: [
+					AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+					AppleAuthentication.AppleAuthenticationScope.EMAIL,
+				],
+			});
+
+
+			if (!credential.identityToken) {
+				throw new Error('IDENTITY_TOKEN')
+			}
+
+			const { error, data: { user } } = await SupabaseClient.auth.signInWithIdToken({
+				provider: 'apple',
+				token: credential.identityToken,
+			})
+
+			if (error) {
+				throw error;
+			}
+
+			setUser({ name: user.email, accessToken: null, id: user.id })
+
+		} catch (e) {
+			throw e
+
+			if (e.code === 'ERR_REQUEST_CANCELED') {
+				// handle that the user canceled the sign-in flow
+			} else {
+				// handle other errors
+			}
+		}
+	}
+
 
 	return (
 		<AuthContext.Provider
 			value={{
 				signIn,
+				signInApple,
 				refreshPix,
 				user
 			}}

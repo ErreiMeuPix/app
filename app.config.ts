@@ -20,6 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: "0.0.1",
   ios: {
     supportsTablet: false,
+    usesAppleSignIn: true,
     bundleIdentifier: "app.erreimeupix",
     buildNumber: "0.0.4",
     infoPlist: {
@@ -33,7 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   android: {
-    package: "app.erreimeupix"
+    package: "app.erreimeupix",
   },
   plugins: [
     [
@@ -48,10 +49,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     "expo-router",
     "@react-native-google-signin/google-signin",
+    "expo-apple-authentication",
   ],
   extra: {
     eas: {
-      projectId: "a6d1ade4-0eb5-4668-9443-ec436fc7364d"
-    }
+      projectId: "a6d1ade4-0eb5-4668-9443-ec436fc7364d",
+    },
   },
 });

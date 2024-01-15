@@ -4,7 +4,7 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "dotenv -e .env.local expo start",
-    "start-dev" : "dotenv -e .env.local expo start --dev-client",
+    "start-dev": "dotenv -e .env.local expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "@types/react": "~18.2.14",
     "expo": "~49.0.15",
+    "expo-apple-authentication": "~6.1.0",
     "expo-blur": "~12.4.1",
     "expo-build-properties": "~0.8.3",
     "expo-constants": "~14.4.2",

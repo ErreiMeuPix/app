@@ -1,18 +1,27 @@
 import React, { useContext } from 'react';
-import { SafeAreaView, View, Image, Text, Button, TouchableOpacity, } from 'react-native';
+import { SafeAreaView, View, Image, Text, Button, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { AuthContext } from '../../contexts/auth_context';
 import { showFlash } from 'flash-notify'
 import { NotifyColors } from '../../../assets/colors/notify-colors';
 import { COLORS } from '../../../assets/colors/colors';
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 
 const Register: React.FC = () => {
 
-	const { signIn } = useContext(AuthContext)
+	const { signIn, signInApple } = useContext(AuthContext)
 
 	async function onSignin() {
 		try {
 			await signIn()
+		} catch (error) {
+			showFlash({ desc: 'Tente novamente mais tarde, por favor', title: 'Impossível fazer login', customColors: NotifyColors.WARNING })
+		}
+	}
+
+	async function onAppleSignin() {
+		try {
+			await signInApple()
 		} catch (error) {
 			showFlash({ desc: 'Tente novamente mais tarde, por favor', title: 'Impossível fazer login', customColors: NotifyColors.WARNING })
 		}
@@ -23,15 +32,35 @@ const Register: React.FC = () => {
 			<View style={{ flex: 4, justifyContent: 'center' }}>
 				<Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
 			</View>
-			<TouchableOpacity onPress={onSignin} style={{ borderColor: COLORS.SECUNDARY_LIGHT, borderWidth: 2, padding: 10, borderRadius: 100, justifyContent: 'center', alignItems: 'center', marginBottom: '5%' }}>
-				<Image source={require('../../../assets/google-icon.png')} style={{ width: 30, height: 30 }} />
-			</TouchableOpacity>
-			<View style={{ flex: 1, borderTopWidth: 2, borderColor: COLORS.SECUNDARY_LIGHT, justifyContent: 'center' }}>
+			<View style={styles.rowContainer}>
+				<TouchableOpacity onPress={onSignin} style={styles.touchableContainer}>
+					<Image source={require('../../../assets/google-icon.png')} style={styles.loginInputsSizes} />
+				</TouchableOpacity>
+				{
+					Platform.OS == 'ios' &&
+					<View style={styles.touchableContainer}>
+						<AppleAuthentication.AppleAuthenticationButton
+							buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+							buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+							cornerRadius={5}
+							style={styles.loginInputsSizes}
+							onPress={onAppleSignin}
+						/>
+					</View>
+				}
+			</View>
+			< View style={{ flex: 1, borderTopWidth: 2, borderColor: COLORS.SECUNDARY_LIGHT, justifyContent: 'center' }}>
 				<Text style={{ color: COLORS.TEXT_GRAY }}>Vamos se cadastrar e resolver isso !</Text>
 			</View>
 		</SafeAreaView>
 
 	);
 }
+
+const styles = StyleSheet.create({
+	touchableContainer: { borderColor: COLORS.SECUNDARY_LIGHT, borderWidth: 2, padding: 10, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginBottom: '5%' },
+	loginInputsSizes: { width: 32, height: 32 },
+	rowContainer: { flexDirection: 'row', justifyContent: 'center', gap: 50, width: '100%' }
+});
 
 export default Register;
