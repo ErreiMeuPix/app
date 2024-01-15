@@ -38,6 +38,10 @@ jobs:
         run: |
           aws s3 cp s3://errei-meu-pix/devops/expo/eas.json eas.json
 
+      - name: 📦 Install dependencies
+        run: |
+         yarn install
+
       - name: 📦 Configura envs
         run: |
           export EXPO_PUBLIC_PROJECT_EAS_ID=$(cat ./eas.json | jq -r '.build.production.env.EXPO_PUBLIC_PROJECT_EAS_ID')
