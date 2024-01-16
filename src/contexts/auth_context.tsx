@@ -4,8 +4,8 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 
 import {
 	GoogleSignin,
-	statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { router } from "expo-router";
 
 GoogleSignin.configure({
 	scopes: ['https://www.googleapis.com/auth/drive.readonly'],
@@ -13,13 +13,14 @@ GoogleSignin.configure({
 	iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
 });
 
-export type TUser = { id: string, name: string, accessToken: string, pixKey?: string }
+export type TUser = { id: string, name: string, pixKey?: string }
 
 export const AuthContext = createContext(
 	{} as {
 		signIn: () => Promise<void>;
 		signInApple: () => Promise<void>;
-		refreshPix: () => Promise<void>
+		refreshPix: () => Promise<void>;
+		logoutUser: () => Promise<void>;
 		user: TUser
 	}
 );
@@ -44,27 +45,17 @@ export default function AuthProvider({ children }: any) {
 				throw new Error("Invalid token");
 			}
 
-			const { data, error } = await SupabaseClient.auth.signInWithIdToken({
-				provider: 'google', token: userInfo.idToken,
-			})
+			const { data, error } = await SupabaseClient.functions.invoke("login-users", { body: { provider: "google", id_token: userInfo.idToken } })
 
 			if (error) {
 				throw error;
 			}
 
-			setUser({ name: userInfo.user.name, accessToken: data.session.access_token, id: data.user.id })
+			await SupabaseClient.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token })
+
+			setUser({ name: data.name, id: data.id })
 
 		} catch (error: any) {
-
-
-			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-				// user cancelled the login flow
-			} else if (error.code === statusCodes.IN_PROGRESS) {
-				// operation (e.g. sign in) is in progress already
-			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-				// play services not available or outdated
-			} else {
-			}
 
 			throw error
 		}
@@ -85,28 +76,29 @@ export default function AuthProvider({ children }: any) {
 				throw new Error('IDENTITY_TOKEN')
 			}
 
-			const { error, data: { user } } = await SupabaseClient.auth.signInWithIdToken({
-				provider: 'apple',
-				token: credential.identityToken,
-			})
+			const { data, error } = await SupabaseClient.functions.invoke("login-users", { body: { provider: "apple", id_token: credential.identityToken } })
 
 			if (error) {
 				throw error;
 			}
 
-			setUser({ name: user.email, accessToken: null, id: user.id })
+			await SupabaseClient.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token })
+
+			setUser({ name: data?.name, id: data.id })
 
 		} catch (e) {
 			throw e
-
-			if (e.code === 'ERR_REQUEST_CANCELED') {
-				// handle that the user canceled the sign-in flow
-			} else {
-				// handle other errors
-			}
 		}
 	}
 
+
+	async function logoutUser() {
+		await SupabaseClient.auth.updateUser({ data: { user_deleted: true } })
+		setUser(null)
+		await SupabaseClient.auth.signOut();
+		router.push('register')
+	}
+console.log(router)
 
 	return (
 		<AuthContext.Provider
@@ -114,6 +106,7 @@ export default function AuthProvider({ children }: any) {
 				signIn,
 				signInApple,
 				refreshPix,
+				logoutUser,
 				user
 			}}
 		>

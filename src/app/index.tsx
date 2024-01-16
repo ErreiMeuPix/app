@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import Home from './home';
+// import Home from './(drawer)/home';
 import Register from './register';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthContext } from '../contexts/auth_context';
+import { Redirect } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,7 +26,7 @@ const App: React.FC = () => {
 	}
 
 	if (user) {
-		return <Home />
+		return <Redirect href={"/(drawer)/home"} />
 	}
 
 	return (

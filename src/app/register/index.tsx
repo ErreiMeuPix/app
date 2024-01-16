@@ -1,39 +1,44 @@
-import React, { useContext } from 'react';
-import { SafeAreaView, View, Image, Text, Button, TouchableOpacity, Platform, StyleSheet } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView, View, Image, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 import { AuthContext } from '../../contexts/auth_context';
 import { showFlash } from 'flash-notify'
 import { NotifyColors } from '../../../assets/colors/notify-colors';
 import { COLORS } from '../../../assets/colors/colors';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { Spinner } from '../../components/spinner';
 
 
 const Register: React.FC = () => {
 
 	const { signIn, signInApple } = useContext(AuthContext)
+	const [loading, setLoading] = useState(false)
 
-	async function onSignin() {
+	async function onSignin(provider: 'apple' | 'google') {
 		try {
-			await signIn()
-		} catch (error) {
-			showFlash({ desc: 'Tente novamente mais tarde, por favor', title: 'Impossível fazer login', customColors: NotifyColors.WARNING })
-		}
-	}
+			setLoading(true)
+			if (provider == 'apple') {
+				await signInApple()
+			}
 
-	async function onAppleSignin() {
-		try {
-			await signInApple()
+			if (provider == 'google') {
+				await signIn()
+			}
+
 		} catch (error) {
-			showFlash({ desc: 'Tente novamente mais tarde, por favor', title: 'Impossível fazer login', customColors: NotifyColors.WARNING })
+			showFlash({ desc: 'Se o erro persistir, entre em contato em @erreimeupix.com.br', title: 'Não foi possível logar', customColors: NotifyColors.WARNING })
+		} finally {
+			setLoading(false)
 		}
 	}
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.SECUNDARY, justifyContent: 'space-around', alignItems: 'center' }}>
+			<Spinner loading={loading} />
 			<View style={{ flex: 4, justifyContent: 'center' }}>
 				<Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
 			</View>
 			<View style={styles.rowContainer}>
-				<TouchableOpacity onPress={onSignin} style={styles.touchableContainer}>
+				<TouchableOpacity onPress={() => onSignin("google")} style={styles.touchableContainer}>
 					<Image source={require('../../../assets/google-icon.png')} style={styles.loginInputsSizes} />
 				</TouchableOpacity>
 				{
@@ -44,7 +49,7 @@ const Register: React.FC = () => {
 							buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
 							cornerRadius={5}
 							style={styles.loginInputsSizes}
-							onPress={onAppleSignin}
+							onPress={() => onSignin("apple")}
 						/>
 					</View>
 				}

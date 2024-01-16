@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: false,
     usesAppleSignIn: true,
     bundleIdentifier: "app.erreimeupix",
-    buildNumber: "0.0.5",
+    buildNumber: "0.0.6",
     infoPlist: {
       CFBundleURLTypes: [
         {
@@ -49,7 +49,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     "expo-router",
     "@react-native-google-signin/google-signin",
-    "expo-apple-authentication",
+    "expo-apple-authentication"
   ],
   extra: {
     eas: {

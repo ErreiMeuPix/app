@@ -9,7 +9,7 @@ Seu pix de volta, em instantes
 Isso gera um build de desenvolvimento para ser executado em um device físico ou emulador
 
 ```bash
-  eas build --profile development --platform android
+  eas build --profile development --platform ios
 ```
 
 Após o build é necessário rodar o expo em modo dev

@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import AuthProvider from '../contexts/auth_context';
 import FlashComponent from 'flash-notify'
 import { StatusBar } from 'react-native';
@@ -8,17 +8,14 @@ export default function Layout() {
 		<AuthProvider>
 			<FlashComponent />
 			<Stack
+				initialRouteName='home'
 				screenOptions={{
 					headerShown: false
 				}}
 			>
 				<StatusBar barStyle='dark-content' />
-
 				<Stack.Screen
 					name='register/index'
-				/>
-				<Stack.Screen
-					name='home/index'
 					options={{ gestureEnabled: false }}
 				/>
 				<Stack.Screen

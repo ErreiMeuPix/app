@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard, StatusBar } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
-import { AuthContext } from '../../contexts/auth_context';
-import { SupabaseUpdatePixKey } from '../../utils/supabase'
+import { AuthContext } from '../../../contexts/auth_context';
+import { SupabaseUpdatePixKey } from '../../../utils/supabase'
 import { showFlash } from 'flash-notify'
-import { NotifyColors } from '../../../assets/colors/notify-colors';
-import { Spinner } from '../../components/spinner';
-import { COLORS } from '../../../assets/colors/colors';
+import { NotifyColors } from '../../../../assets/colors/notify-colors';
+import { Spinner } from '../../../components/spinner';
+import { COLORS } from '../../../../assets/colors/colors';
+import { DrawerBack } from '../../../components/drawerBack';
 
 const Home: React.FC = () => {
 	const rootPixInputRef = useRef<TextInput>();
@@ -80,13 +81,14 @@ const Home: React.FC = () => {
 		}
 	}
 
+
 	return (
 		<>
 			<SafeAreaView style={{ flex: 0, backgroundColor: COLORS.PRIMARY }} />
-
 			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
 				<Spinner loading={loading} />
 				<View style={styles.containerWrapper}>
+					<DrawerBack />
 					<View style={styles.containerTop}>
 						<View style={styles.blankContainer}>
 							<View >
@@ -155,6 +157,7 @@ const Home: React.FC = () => {
 
 const styles = StyleSheet.create({
 	pixText: { color: COLORS.SECUNDARY, fontSize: 15, fontFamily: 'SemiBold' },
+	deleteAccountText: { color: COLORS.BUTTON_HINT, fontSize: 15, fontFamily: 'Light', paddingLeft: '5%' },
 	requestsText: { color: COLORS.WHITE, fontFamily: 'SemiBold' },
 	requestsCotnainer: { backgroundColor: COLORS.PRIMARY, paddingHorizontal: 10, paddingVertical: 5, marginTop: '2%', borderRadius: 5 },
 	subtitlePix: { color: COLORS.TEXT_GRAY, fontSize: 12, top: 5, fontFamily: 'Light' },
