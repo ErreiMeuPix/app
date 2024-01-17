@@ -29,7 +29,6 @@ const DrawerNavigation = () => {
 
 	return (
 		<Drawer
-			initialRouteName='home'
 			drawerContent={CustomDrawerContent}
 			screenOptions={{
 				headerTransparent: true,
@@ -43,7 +42,11 @@ const DrawerNavigation = () => {
 					width: 300,
 				}
 			}}
-		/>
+		>
+			<Drawer.Screen
+				name="drawer" // This is the name of the page and must match the url from root
+			/>
+		</Drawer>
 	);
 }
 

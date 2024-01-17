@@ -1,19 +1,34 @@
-import { Stack, Tabs } from 'expo-router';
+import { Stack } from 'expo-router';
 import AuthProvider from '../contexts/auth_context';
 import FlashComponent from 'flash-notify'
-import { StatusBar } from 'react-native';
+import { useFonts } from 'expo-font';
+
 
 export default function Layout() {
+
+	let [fontsLoaded] = useFonts({
+		Black: require('../../assets/fonts/Approach-Black.ttf'),
+		Bold: require('../../assets/fonts/Approach-Bold.ttf'),
+		Light: require('../../assets/fonts/Approach-Light.ttf'),
+		Mediun: require('../../assets/fonts/Approach-Medium.ttf'),
+		Regular: require('../../assets/fonts/Approach-Regular.ttf'),
+		SemiBold: require('../../assets/fonts/Approach-SemiBold.ttf'),
+	});
+
+	if (!fontsLoaded) {
+		return null;
+	}
+
 	return (
 		<AuthProvider>
 			<FlashComponent />
 			<Stack
-				initialRouteName='home'
+				initialRouteName='register'
 				screenOptions={{
 					headerShown: false
 				}}
-			>
-				<StatusBar barStyle='dark-content' />
+			/>
+			{/* <StatusBar barStyle='dark-content' />
 				<Stack.Screen
 					name='register/index'
 					options={{ gestureEnabled: false }}
@@ -28,7 +43,11 @@ export default function Layout() {
 					name='success_request/index'
 					options={{ gestureEnabled: false }}
 				/>
-			</Stack>
+				<Stack.Screen
+					name='drawer'
+					options={{ gestureEnabled: false }}
+				/> */}
+			{/* </Stack> */}
 		</AuthProvider>
 	)
 }

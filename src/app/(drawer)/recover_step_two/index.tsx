@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { Validator } from '../../utils/validators';
-import { SupabaseCreatePixRequest } from '../../utils/supabase';
-import { AuthContext } from '../../contexts/auth_context';
+import { Validator } from '../../../utils/validators';
+import { SupabaseCreatePixRequest } from '../../../utils/supabase';
+import { AuthContext } from '../../../contexts/auth_context';
 import { TextInputMask } from 'react-native-masked-text';
 import { showFlash } from 'flash-notify'
-import { NotifyColors } from '../../../assets/colors/notify-colors';
-import { Spinner } from '../../components/spinner';
+import { NotifyColors } from '../../../../assets/colors/notify-colors';
+import { Spinner } from '../../../components/spinner';
 import { router } from 'expo-router'
-import { COLORS } from '../../../assets/colors/colors';
+import { COLORS } from '../../../../assets/colors/colors';
 
 const RecoverSteptTwo: React.FC = () => {
 	const { user } = useContext(AuthContext)

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Image, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
-import { AuthContext } from '../../contexts/auth_context';
+import { AuthContext } from '../../../contexts/auth_context';
 import { showFlash } from 'flash-notify'
-import { NotifyColors } from '../../../assets/colors/notify-colors';
-import { COLORS } from '../../../assets/colors/colors';
+import { NotifyColors } from '../../../../assets/colors/notify-colors';
+import { COLORS } from '../../../../assets/colors/colors';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { Spinner } from '../../components/spinner';
+import { Spinner } from '../../../components/spinner';
 
 
 const Register: React.FC = () => {
@@ -36,11 +36,11 @@ const Register: React.FC = () => {
 		<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.SECUNDARY, justifyContent: 'space-around', alignItems: 'center' }}>
 			<Spinner loading={loading} />
 			<View style={{ flex: 4, justifyContent: 'center' }}>
-				<Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
+				<Image source={require('../../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
 			</View>
 			<View style={styles.rowContainer}>
 				<TouchableOpacity onPress={() => onSignin("google")} style={styles.touchableContainer}>
-					<Image source={require('../../../assets/google-icon.png')} style={styles.loginInputsSizes} />
+					<Image source={require('../../../../assets/google-icon.png')} style={styles.loginInputsSizes} />
 				</TouchableOpacity>
 				{
 					Platform.OS == 'ios' &&

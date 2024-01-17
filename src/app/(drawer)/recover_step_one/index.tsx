@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { router } from 'expo-router'
-import { COLORS } from '../../../assets/colors/colors';
+import { COLORS } from '../../../../assets/colors/colors';
 
 const RecoverStepOne: React.FC = () => {
 	return (

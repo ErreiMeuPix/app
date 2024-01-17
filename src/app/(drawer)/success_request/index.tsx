@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
-import { COLORS } from '../../../assets/colors/colors';
+import { COLORS } from '../../../../assets/colors/colors';
 
 
 const SuccessRequest: React.FC = () => {
