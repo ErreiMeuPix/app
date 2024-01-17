@@ -25,7 +25,8 @@ const Register: React.FC = () => {
 			}
 
 		} catch (error) {
-			showFlash({ desc: 'Se o erro persistir, entre em contato em @erreimeupix.com.br', title: 'Não foi possível logar', customColors: NotifyColors.WARNING })
+			console.log(error)
+			showFlash({ desc: error, title: 'Não foi possível logar', customColors: NotifyColors.WARNING })
 		} finally {
 			setLoading(false)
 		}

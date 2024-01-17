@@ -35,6 +35,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: "app.erreimeupix",
+    adaptiveIcon: {
+      foregroundImage: "./assets/icon.png",
+      backgroundColor: "#0FDC6D",
+    },
   },
   plugins: [
     [
@@ -49,7 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     "expo-router",
     "@react-native-google-signin/google-signin",
-    "expo-apple-authentication"
+    "expo-apple-authentication",
   ],
   extra: {
     eas: {

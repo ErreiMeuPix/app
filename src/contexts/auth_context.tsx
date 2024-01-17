@@ -34,7 +34,6 @@ export default function AuthProvider({ children }: any) {
 
 		setUser({ ...user, pixKey: valuePix })
 	}
-
 	const signIn = async () => {
 		try {
 			await GoogleSignin.hasPlayServices();
@@ -94,11 +93,10 @@ export default function AuthProvider({ children }: any) {
 
 	async function logoutUser() {
 		await SupabaseClient.auth.updateUser({ data: { user_deleted: true } })
-		setUser(null)
 		await SupabaseClient.auth.signOut();
-		router.push('register')
+		setUser(null)
+		router.replace('register')
 	}
-console.log(router)
 
 	return (
 		<AuthContext.Provider
