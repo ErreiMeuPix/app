@@ -1,11 +1,11 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import { SupabaseClient, SupabaseGetPixKey } from '../utils/supabase'
 import * as AppleAuthentication from 'expo-apple-authentication';
-
+import { router } from "expo-router";
 import {
 	GoogleSignin,
 } from '@react-native-google-signin/google-signin';
-import { router } from "expo-router";
+import { Spinner } from "../components/spinner";
 
 GoogleSignin.configure({
 	scopes: ['https://www.googleapis.com/auth/drive.readonly'],
@@ -25,17 +25,34 @@ export const AuthContext = createContext(
 	}
 );
 
-export default function AuthProvider({ children }: any) {
+export function useSession() {
+	const value = useContext(AuthContext);
 
+	return value;
+}
+
+export default function SessionProvider({ children }: React.PropsWithChildren) {
 	const [user, setUser] = useState<TUser>(null)
+	const [loading, setLoading] = useState(false)
 
-	const refreshPix = async () => {
+	useEffect(() => {
+
+		//Manter o loading desta forma, um erro esta ocasionando ao adicionar no finally
+		if (loading) {
+			setLoading(false)
+		}
+
+	}, [user])
+
+	async function refreshPix() {
 		const valuePix = await SupabaseGetPixKey(user.id);
 
 		setUser({ ...user, pixKey: valuePix })
 	}
-	const signIn = async () => {
+
+	async function signIn() {
 		try {
+			setLoading(true)
 			await GoogleSignin.hasPlayServices();
 
 			const userInfo = await GoogleSignin.signIn();
@@ -47,7 +64,7 @@ export default function AuthProvider({ children }: any) {
 			const { data, error } = await SupabaseClient.functions.invoke("login-users", { body: { provider: "google", id_token: userInfo.idToken } })
 
 			if (error) {
-				throw error;
+				throw new Error();
 			}
 
 			await SupabaseClient.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token })
@@ -62,7 +79,7 @@ export default function AuthProvider({ children }: any) {
 
 	async function signInApple() {
 		try {
-
+			setLoading(true)
 			const credential = await AppleAuthentication.signInAsync({
 				requestedScopes: [
 					AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -80,7 +97,6 @@ export default function AuthProvider({ children }: any) {
 			if (error) {
 				throw error;
 			}
-
 			await SupabaseClient.auth.setSession({ access_token: data.session.access_token, refresh_token: data.session.refresh_token })
 
 			setUser({ name: data?.name, id: data.id })
@@ -89,7 +105,6 @@ export default function AuthProvider({ children }: any) {
 			throw e
 		}
 	}
-
 
 	async function logoutUser() {
 		await SupabaseClient.auth.updateUser({ data: { user_deleted: true } })
@@ -108,6 +123,8 @@ export default function AuthProvider({ children }: any) {
 				user
 			}}
 		>
+			<Spinner loading={loading} />
+
 			{children}
 		</AuthContext.Provider>
 	);

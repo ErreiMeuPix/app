@@ -1,13 +1,17 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet } from 'react-native';
 import { Drawer } from 'expo-router/drawer'
 
-import { COLORS } from '../../../assets/colors/colors';
-import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { COLORS } from '../../../../assets/colors/colors';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { useRouter } from 'expo-router';
+import { AuthContext } from '../../../contexts/auth_context';
+import Register from '../../register';
 
 const DrawerNavigation = () => {
 	const router = useRouter();
+
+	const { user } = useContext(AuthContext)
 
 	function CustomDrawerContent(props: any) {
 		return (
@@ -15,7 +19,7 @@ const DrawerNavigation = () => {
 				<DrawerItem
 					label="Início"
 					labelStyle={styles.drawerItemsText}
-					onPress={() => router.push('home')}
+					onPress={() => router.push('/')}
 				/>
 				<DrawerItem
 					label="Configurações"
@@ -27,9 +31,13 @@ const DrawerNavigation = () => {
 		)
 	}
 
+	if (!user) {
+		return <Register />;
+	}
+
 	return (
 		<Drawer
-			initialRouteName='home'
+			initialRouteName='/'
 			drawerContent={CustomDrawerContent}
 			screenOptions={{
 				headerTransparent: true,
@@ -43,7 +51,12 @@ const DrawerNavigation = () => {
 					width: 300,
 				}
 			}}
-		/>
+		>
+			{/* <Drawer.Screen
+				name="/"
+				options={{ gestureHandlerProps: false }}
+			/> */}
+		</Drawer>
 	);
 }
 

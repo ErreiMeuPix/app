@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Text, Alert } from 'react-native';
-import { COLORS } from '../../../../assets/colors/colors';
+import { COLORS } from '../../../../../assets/colors/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Feather } from '@expo/vector-icons';
-import { DrawerBack } from '../../../components/drawerBack';
-import { AuthContext } from '../../../contexts/auth_context';
-import { Spinner } from '../../../components/spinner';
+import { DrawerBack } from '../../../../components/drawerBack';
+import { AuthContext } from '../../../../contexts/auth_context';
+import { Spinner } from '../../../../components/spinner';
 
 const Settings: React.FC = () => {
 

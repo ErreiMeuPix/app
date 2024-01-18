@@ -11,11 +11,9 @@ import { Spinner } from '../../components/spinner';
 const Register: React.FC = () => {
 
 	const { signIn, signInApple } = useContext(AuthContext)
-	const [loading, setLoading] = useState(false)
 
 	async function onSignin(provider: 'apple' | 'google') {
 		try {
-			setLoading(true)
 			if (provider == 'apple') {
 				await signInApple()
 			}
@@ -25,16 +23,12 @@ const Register: React.FC = () => {
 			}
 
 		} catch (error) {
-			console.log(error)
-			showFlash({ desc: error, title: 'Não foi possível logar', customColors: NotifyColors.WARNING })
-		} finally {
-			setLoading(false)
+			showFlash({ desc: "Não foi possível te logar", title: 'Ocorreu um erro ao fazer login', customColors: NotifyColors.WARNING })
 		}
 	}
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.SECUNDARY, justifyContent: 'space-around', alignItems: 'center' }}>
-			<Spinner loading={loading} />
 			<View style={{ flex: 4, justifyContent: 'center' }}>
 				<Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
 			</View>

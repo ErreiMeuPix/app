@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, Keyboard, BackHandler } from 'react-native';
 import Feathers from '@expo/vector-icons/Feather';
 import { router } from 'expo-router'
 import { AuthContext } from '../../../contexts/auth_context';
@@ -31,7 +31,6 @@ const Home: React.FC = () => {
 			}
 		}
 		)()
-
 	}, [])
 
 	useEffect(() => {
@@ -161,7 +160,7 @@ const styles = StyleSheet.create({
 	requestsText: { color: COLORS.WHITE, fontFamily: 'SemiBold' },
 	requestsCotnainer: { backgroundColor: COLORS.PRIMARY, paddingHorizontal: 10, paddingVertical: 5, marginTop: '2%', borderRadius: 5 },
 	subtitlePix: { color: COLORS.TEXT_GRAY, fontSize: 12, top: 5, fontFamily: 'Light' },
-	containerWrapper: { backgroundColor: COLORS.PRIMARY, flex: 1},
+	containerWrapper: { backgroundColor: COLORS.PRIMARY, flex: 1 },
 	containerTop: { backgroundColor: COLORS.PRIMARY, flex: 1, justifyContent: 'center', alignItems: 'center' },
 	containerBottom: { backgroundColor: COLORS.WHITE, flex: 1, borderTopLeftRadius: 25, borderTopRightRadius: 25, alignItems: 'center' },
 	blankContainer: { borderRadius: 10, backgroundColor: COLORS.WHITE, width: '90%', height: '50%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-evenly' },

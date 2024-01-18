@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { router } from 'expo-router'
-import { COLORS } from '../../../assets/colors/colors';
+import { useRouter } from 'expo-router'
+import { COLORS } from '../../../../assets/colors/colors';
+import { AuthContext } from '../../../contexts/auth_context';
+import { showFlash } from 'flash-notify'
+import { NotifyColors } from '../../../../assets/colors/notify-colors';
 
 const RecoverStepOne: React.FC = () => {
+	const { user } = useContext(AuthContext)
+	const router = useRouter()
+
 	return (
 		<View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'flex-start', backgroundColor: COLORS.PRIMARY, padding: 20 }}>
 
@@ -12,7 +18,16 @@ const RecoverStepOne: React.FC = () => {
 			<Text style={styles.subtitleThree}>E iremos cobrar uma taxa de{'\n'}2.69% , SOMENTE se{'\n'}conseguirmos reaver o seu dinheiro ;)</Text>
 
 			<TouchableOpacity
-				onPress={() => router.push('recover_step_two')}
+				onPress={() => {
+
+					if (!user.pixKey) {
+						showFlash({ desc: 'Para prosseguir cadastre sua chave PIX', title: 'Cadastre uma chave PIX', customColors: NotifyColors.WARNING })
+						router.push('/')
+						return
+					}
+
+					router.push('recover_step_two')
+				}}
 				activeOpacity={0.8}
 				style={styles.agreeButton}>
 				<Text style={styles.agreeText}>

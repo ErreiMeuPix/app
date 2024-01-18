@@ -1,17 +1,20 @@
 import React, { useContext, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { Validator } from '../../utils/validators';
-import { SupabaseCreatePixRequest } from '../../utils/supabase';
-import { AuthContext } from '../../contexts/auth_context';
+import { Validator } from '../../../utils/validators';
+import { SupabaseCreatePixRequest } from '../../../utils/supabase';
+import { AuthContext } from '../../../contexts/auth_context';
 import { TextInputMask } from 'react-native-masked-text';
 import { showFlash } from 'flash-notify'
-import { NotifyColors } from '../../../assets/colors/notify-colors';
-import { Spinner } from '../../components/spinner';
-import { router } from 'expo-router'
-import { COLORS } from '../../../assets/colors/colors';
+import { NotifyColors } from '../../../../assets/colors/notify-colors';
+import { Spinner } from '../../../components/spinner';
+import { COLORS } from '../../../../assets/colors/colors';
+import { useRouter } from 'expo-router/src/hooks';
 
 const RecoverSteptTwo: React.FC = () => {
+	const router = useRouter()
+
 	const { user } = useContext(AuthContext)
+
 
 	const [pixKey, setPixKey] = useState<string | null>(null)
 	const [amount, setAmount] = useState<string | null>(null)
@@ -81,7 +84,7 @@ const RecoverSteptTwo: React.FC = () => {
 				<Text style={styles.subtitleOne}>FALTA MENOS QUE{'\n'}ANTES!</Text>
 
 				<Text style={styles.subtitleTwo}>Qual chave PIX você fez o envio ?</Text>
-				<Text style={styles.subtitlePixTypes}>São aceitos até o momento e-mail,telefone e CPF</Text>
+				<Text style={styles.subtitlePixTypes}>Não aceitamos chaves aleatórias</Text>
 				<TextInput onChangeText={setPixKey} value={pixKey} style={styles.inputValue} placeholderTextColor={COLORS.GRAY_LIGHT} placeholder='Cole aqui' keyboardType='ascii-capable' />
 				<TextInputMask
 					onChangeText={handleAmountChange}
