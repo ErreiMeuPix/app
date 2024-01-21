@@ -5,7 +5,6 @@ import { showFlash } from 'flash-notify'
 import { NotifyColors } from '../../../assets/colors/notify-colors';
 import { COLORS } from '../../../assets/colors/colors';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { Spinner } from '../../components/spinner';
 
 
 const Register: React.FC = () => {

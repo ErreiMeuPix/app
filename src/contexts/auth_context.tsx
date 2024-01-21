@@ -4,8 +4,11 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { router } from "expo-router";
 import {
 	GoogleSignin,
+	statusCodes
 } from '@react-native-google-signin/google-signin';
 import { Spinner } from "../components/spinner";
+import { showFlash } from 'flash-notify'
+import { NotifyColors } from "../../assets/colors/notify-colors";
 
 GoogleSignin.configure({
 	scopes: ['https://www.googleapis.com/auth/drive.readonly'],
@@ -52,16 +55,19 @@ export default function SessionProvider({ children }: React.PropsWithChildren) {
 
 	async function signIn() {
 		try {
-			setLoading(true)
+			// setLoading(true)
 			await GoogleSignin.hasPlayServices();
 
 			const userInfo = await GoogleSignin.signIn();
-
+			console.log(userInfo)
 			if (!userInfo.idToken) {
-				throw new Error("Invalid token");
+				showFlash({ desc: "", title: 'Não achou id token', customColors: NotifyColors.WARNING })
+				return
+				// throw new Error("Invalid token");
 			}
 
 			const { data, error } = await SupabaseClient.functions.invoke("login-users", { body: { provider: "google", id_token: userInfo.idToken } })
+			showFlash({ desc: "", title: 'Erro no supabase', customColors: NotifyColors.WARNING })
 
 			if (error) {
 				throw new Error();
@@ -72,6 +78,17 @@ export default function SessionProvider({ children }: React.PropsWithChildren) {
 			setUser({ name: data.name, id: data.id })
 
 		} catch (error: any) {
+
+			if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+				showFlash({ desc: "", title: 'SIGN_IN_CANCELLED', customColors: NotifyColors.WARNING })
+			} else if (error.code === statusCodes.IN_PROGRESS) {
+				showFlash({ desc: "", title: 'IN_PROGRESS', customColors: NotifyColors.WARNING })
+			} else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+				showFlash({ desc: "", title: 'PLAY_SERVICES_NOT_AVAILABLE', customColors: NotifyColors.WARNING })
+			} else {
+				console.log(error)
+				showFlash({ desc: "", title: 'OUTRO ERRO', customColors: NotifyColors.WARNING })
+			}
 
 			throw error
 		}
