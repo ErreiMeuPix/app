@@ -22,7 +22,7 @@ const Register: React.FC = () => {
 			}
 
 		} catch (error) {
-			// showFlash({ desc: "Não foi possível te logar", title: 'Ocorreu um erro ao fazer login', customColors: NotifyColors.WARNING })
+			showFlash({ desc: "Não foi possível te logar", title: 'Ocorreu um erro ao fazer login', customColors: NotifyColors.WARNING })
 		}
 	}
 

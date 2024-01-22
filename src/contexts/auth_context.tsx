@@ -10,11 +10,13 @@ import { Spinner } from "../components/spinner";
 import { showFlash } from 'flash-notify'
 import { NotifyColors } from "../../assets/colors/notify-colors";
 
-GoogleSignin.configure({
-	scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-	webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-	iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
-});
+// GoogleSignin.configure({
+// 	scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+// 	webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+// 	iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
+// });
+
+GoogleSignin.configure();
 
 export type TUser = { id: string, name: string, pixKey?: string }
 
@@ -55,19 +57,16 @@ export default function SessionProvider({ children }: React.PropsWithChildren) {
 
 	async function signIn() {
 		try {
-			// setLoading(true)
+			setLoading(true)
 			await GoogleSignin.hasPlayServices();
 
 			const userInfo = await GoogleSignin.signIn();
 
 			if (!userInfo?.idToken) {
-				showFlash({ desc: "", title: 'Não achou id token', customColors: NotifyColors.WARNING })
-				return
-				// throw new Error("Invalid token");
+				throw new Error("Invalid token");
 			}
 
 			const { data, error } = await SupabaseClient.functions.invoke("login-users", { body: { provider: "google", id_token: userInfo.idToken } })
-			showFlash({ desc: "", title: 'Erro no supabase', customColors: NotifyColors.WARNING })
 
 			if (error) {
 				throw new Error();
@@ -78,10 +77,9 @@ export default function SessionProvider({ children }: React.PropsWithChildren) {
 			setUser({ name: data.name, id: data.id })
 
 		} catch (error: any) {
-
-			showFlash({ desc: error, title: '', customColors: NotifyColors.WARNING })
-
-			// throw error
+			throw error
+		} finally {
+			setLoading(false)
 		}
 	};
 
